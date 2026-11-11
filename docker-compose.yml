@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+
+  app1:
+    build: ./app1
+    container_name: app1-collector
+    ports:
+      - "8081:80"
+    depends_on:
+      - redis
+
+  app2:
+    build: ./app2
+    container_name: app2-dashboard
+    ports:
+      - "8082:80"
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:
